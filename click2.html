@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Gift for You</title>
+    
+    <!-- 预加载所有关键资源 -->
+    <link rel="preload" href="https://github.com/xliu2090/my-images/blob/main/烟花%20(2)_爱给网_aigei_com.gif?raw=true" as="image">
+    <link rel="preload" href="https://raw.githubusercontent.com/xliu2090/my-images/refs/heads/main/1754086011516.png" as="image">
+    
+    <style>
+        /* --- 通用样式 --- */
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        .page { display: none; justify-content: center; align-items: center; flex-direction: column; height: 100%; background: radial-gradient(ellipse at center, #4a4a4a 0%, #1c1c1c 100%); color: #ffffff; text-align: center; }
+        .page.active { display: flex; animation: fadeIn 1s ease-in-out; }
+        
+        /* 关键修改 1: 添加一个内容包装器用于缩放 */
+        .content-scaler {
+            transform: scale(0.85); /* 将内容整体缩小到85% */
+        }
+
+        /* --- 页面 1: 礼物盒样式 --- */
+        #page1 .gift-wrapper { position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        #page1 .gift-box { font-size: 8rem; position: relative; z-index: 2; animation: bounce-enhanced 1.8s infinite ease-in-out, glow 2.5s infinite alternate ease-in-out; }
+        #page1 .gift-shadow { width: 70px; height: 15px; background: rgba(0, 0, 0, 0.2); border-radius: 50%; filter: blur(10px); z-index: 1; margin-top: 20px; animation: shadow-bounce 1.8s infinite ease-in-out; }
+        #page1 .click-text { font-size: 3.5rem; font-weight: bold; margin-top: 25px; text-shadow: 0 0 18px rgba(255, 255, 255, 0.6); }
+        
+        /* --- 页面 2: Hi! 页面样式 --- */
+        #page2 h1 { font-size: 10rem; font-weight: bold; margin: 0; text-shadow: 0 0 25px rgba(255, 255, 255, 0.7); }
+        #page2 .waving-gif { width: 150px; height: auto; margin-top: 20px; animation: wave-hand 2.5s ease-in-out infinite; }
+        #page2 .next-button { margin-top: 40px; padding: 12px 28px; background-color: transparent; border: 2px solid #fff; color: #fff; border-radius: 50px; font-size: 1.2rem; text-decoration: none; cursor: pointer; transition: background-color 0.3s, color 0.3s; }
+        #page2 .next-button:hover { background-color: #fff; color: #333; }
+        
+        /* --- 页面 3: 文字与风景页面样式 --- */
+        #page3 { background-image: url('https://raw.githubusercontent.com/xliu2090/my-images/refs/heads/main/1754086011516.png'); background-size: 120%; background-position: center; animation: fadeIn 1.5s ease-in-out, zoomInEffect 40s linear infinite; }
+        #page3 .text-container {
+            max-width: 650px;
+            padding: 2rem 3rem;
+            /* 关键修改 3: 降低 alpha 值 (0.55 -> 0.4) 使其更透明 */
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(6px); /* 稍微降低模糊以配合透明度 */
+            text-align: left;
+            animation: slideUp 1.2s ease-out;
+        }
+        #page3 p { margin: 0 0 1.5rem 0; font-size: 1.1rem; line-height: 1.8; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+        #page3 p:last-child { margin-bottom: 0; }
+        
+        /* --- 动画效果 --- */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes zoomInEffect { 0% { background-size: 120%; } 100% { background-size: 100%; } }
+        @keyframes bounce-enhanced { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-30px) rotate(8deg) scale(1.05); } 55% { transform: translateY(-30px) rotate(-8deg) scale(1.05); } }
+        @keyframes shadow-bounce { 0%, 100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(0.75); opacity: 0.3; } }
+        @keyframes glow { from { text-shadow: 0 0 10px #fff, 0 0 20px #ffdd77, 0 0 30px #ffdd77; } to { text-shadow: 0 0 20px #fff, 0 0 35px #ffdd77, 0 0 45px #ffdd77; } }
+        @keyframes wave-hand { 0%, 100% { transform: rotate(0deg); } 15% { transform: rotate(14deg); } 30% { transform: rotate(-8deg); } 40% { transform: rotate(14deg); } 50% { transform: rotate(-4deg); } 60% { transform: rotate(10deg); } 70% { transform: rotate(0deg); } }
+        
+        .fireworks-gif { position: fixed; width: 300px; height: 300px; transform: translate(-50%, -50%); z-index: 10002; pointer-events: none; }
+        #music-toggle { position: fixed; top: 20px; right: 20px; z-index: 10001; width: 45px; height: 45px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50%; color: white; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+    </style>
+</head>
+<body>
+
+    <div class="page active" id="page1">
+        <div class="content-scaler">
+            <div class="gift-wrapper" onclick="openGift(event)">
+                <div class="gift-box">🎁</div>
+                <div class="gift-shadow"></div>
+            </div>
+            <div class="click-text">Click the Gift!</div>
+        </div>
+    </div>
+
+    <div class="page" id="page2">
+        <div class="content-scaler">
+            <h1>Hi!</h1>
+            <img src="https://raw.githubusercontent.com/xliu2090/my-images/refs/heads/main/%E7%BA%BF%E6%9D%A1%E5%B0%8F%E7%8B%97_%E7%88%B1%E7%BB%99%E7%BD%91_aigei_com.gif" alt="Waving dog gif" class="waving-gif">
+            <a href="#" class="next-button" onclick="goToPoem(event)">Next</a>
+        </div>
+    </div>
+    
+    <div class="page" id="page3">
+        <div class="text-container">
+            <p>晚霞染红了半边天，微风轻抚过湖面，泛起层层涟漪。远山如黛，倒映在水中，像一幅淡雅的水墨画。</p>
+            <p>岸边的柳树垂下长长的枝条，在风中轻柔地摆动，偶尔有几片叶子飘落，打破了湖面的宁静。鸟儿归巢，传来阵阵啁啾声，为这个傍晚增添了生机。</p>
+            <p>夕阳西下，金色的光芒洒在大地上，一切都显得那么温暖。这一刻，时间仿佛停止了，只有内心的平静在慢慢流淌。远处炊烟袅袅，提醒着人们家的温暖正在等待。</p>
+        </div>
+    </div>
+
+    <!-- 关键修改 2: 移除了 bg-music 的 autoplay 属性 -->
+    <audio id="click-sound" preload="auto"><source src="https://raw.githubusercontent.com/xliu2090/my-images/main/xm3683.wav" type="audio/wav"></audio>
+    <audio id="bg-music" loop preload="auto"><source src="https://raw.githubusercontent.com/xliu2090/my-images/main/obj_wo3DlMOGwrbDjj7DisKw_36568334256_2fbe_f8fb_d953_dea8acd8ffce77212827b3ec58e8a850.mp3" type="audio/mpeg"></audio>
+    <button id="music-toggle">🎵</button>
+
+    <script>
+        const page1 = document.getElementById('page1');
+        const page2 = document.getElementById('page2');
+        const page3 = document.getElementById('page3');
+        const clickSound = document.getElementById('click-sound');
+        const bgMusic = document.getElementById('bg-music');
+        const musicToggle = document.getElementById('music-toggle');
+        
+        let giftOpened = false;
+
+        function openGift(event) {
+            if (giftOpened) return;
+            giftOpened = true;
+            clickSound.currentTime = 0; clickSound.play();
+            let clickX, clickY;
+            if (event.touches && event.touches.length > 0) { clickX = event.touches[0].clientX; clickY = event.touches[0].clientY; } else { clickX = event.clientX; clickY = event.clientY; }
+            const fireworks = document.createElement('img');
+            fireworks.src = 'https://github.com/xliu2090/my-images/blob/main/烟花%20(2)_爱给网_aigei_com.gif?raw=true';
+            fireworks.className = 'fireworks-gif';
+            fireworks.style.left = clickX + 'px'; fireworks.style.top = clickY + 'px';
+            document.body.appendChild(fireworks);
+            setTimeout(() => { if (fireworks.parentNode) { fireworks.parentNode.removeChild(fireworks); } }, 1500);
+            page1.classList.remove('active');
+            page2.classList.add('active');
+        }
+
+        function goToPoem(event) {
+            event.preventDefault();
+            page2.classList.remove('active');
+            page3.classList.add('active');
+        }
+
+        // --- 音乐控制逻辑修改 ---
+        let musicIsIntendedToPlay = false; // 默认意图为不播放
+        let hasInteracted = false;
+        
+        // 关键修改 2: 页面加载时，按钮显示为暂停状态
+        musicToggle.textContent = '⏸️';
+
+        musicToggle.addEventListener('click', () => {
+            musicIsIntendedToPlay = !musicIsIntendedToPlay;
+            if (musicIsIntendedToPlay) {
+                musicToggle.textContent = '🎵';
+                // 只有在用户首次与页面交互后，才尝试播放
+                if (hasInteracted) {
+                    bgMusic.play();
+                }
+            } else {
+                musicToggle.textContent = '⏸️';
+                bgMusic.pause();
+            }
+        });
+
+        function handleFirstInteraction() {
+            if (hasInteracted) return;
+            hasInteracted = true;
+            // 首次交互时不再自动播放音乐，而是等待用户点击音乐按钮
+        }
+        
+        document.body.addEventListener('touchend', handleFirstInteraction, { once: true });
+        document.body.addEventListener('click', handleFirstInteraction, { once: true });
+    </script>
+
+</body>
+</html>
