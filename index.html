@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click the Gift!</title>
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        .container { display: flex; justify-content: center; align-items: center; height: 100%; background: radial-gradient(ellipse at center, #4a4a4a 0%, #1c1c1c 100%); padding: 20px; box-sizing: border-box; }
+        .gift-link { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: inherit; -webkit-tap-highlight-color: transparent; cursor: pointer; }
+        .click-text { color: #ffffff; font-size: 3.5rem; font-weight: bold; margin-top: 25px; text-shadow: 0 0 18px rgba(255, 255, 255, 0.6); text-align: center; transition: transform 0.1s ease-out, text-shadow 0.3s ease; }
+        .gift-link:hover .click-text { text-shadow: 0 0 25px rgba(255, 255, 255, 0.8); }
+        #page-transition-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1c1c1c; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.5s ease-in-out; }
+        #page-transition-overlay.visible { opacity: 1; pointer-events: auto; }
+        #music-toggle { position: fixed; top: 20px; right: 20px; z-index: 10000; width: 45px; height: 45px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50%; color: white; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); transition: background-color 0.2s ease, transform 0.2s ease; }
+        #music-toggle:hover { background-color: rgba(255, 255, 255, 0.25); transform: scale(1.1); }
+        .gift-wrapper { position: relative; display: flex; flex-direction: column; align-items: center; transition: transform 0.3s ease; }
+        .gift-box { font-size: 8rem; position: relative; z-index: 2; animation: bounce-enhanced 1.8s infinite ease-in-out, glow 2.5s infinite alternate ease-in-out; }
+        .gift-box::before, .gift-box::after { content: '✨'; position: absolute; font-size: 1.8rem; opacity: 0; z-index: 1; animation: sparkle-pop 1.8s infinite ease-in-out; }
+        .gift-box::before { top: 0; left: -30px; }
+        .gift-box::after { bottom: 20px; right: -30px; animation-delay: -0.9s; }
+        .gift-shadow { width: 70px; height: 15px; background: rgba(0, 0, 0, 0.2); border-radius: 50%; filter: blur(10px); z-index: 1; margin-top: 20px; animation: shadow-bounce 1.8s infinite ease-in-out; }
+        .gift-link:hover .gift-wrapper { transform: scale(1.1); }
+        .particles { position: absolute; top: 50%; left: 50%; width: 1px; height: 1px; z-index: 5; pointer-events: none; }
+        .particles .particle { position: absolute; width: 10px; height: 10px; border-radius: 50%; opacity: 0; }
+        .gift-wrapper.clicked .gift-box { animation: shake 0.4s ease-in-out; }
+        .gift-wrapper.clicked .particle { animation: explode 0.6s ease-out forwards; }
+        @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
+        @keyframes explode { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: var(--translate-end) scale(0); opacity: 0; } }
+        @keyframes bounce-enhanced { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-30px) rotate(8deg) scale(1.05); } 55% { transform: translateY(-30px) rotate(-8deg) scale(1.05); } }
+        @keyframes shadow-bounce { 0%, 100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(0.75); opacity: 0.3; } }
+        @keyframes sparkle-pop { 0%, 45%, 55%, 100% { opacity: 0; transform: scale(0); } 50% { opacity: 1; transform: scale(1) rotate(15deg); } }
+        @keyframes glow { from { text-shadow: 0 0 10px #fff, 0 0 20px #ffdd77, 0 0 30px #ffdd77; } to { text-shadow: 0 0 20px #fff, 0 0 35px #ffdd77, 0 0 45px #ffdd77; } }
+        @media (max-width: 600px) { .gift-box { font-size: 6rem; } .gift-shadow { width: 50px; height: 12px; margin-top: 15px; } .gift-box::before { left: -20px; } .gift-box::after { right: -20px; } .click-text { font-size: 2.5rem; margin-top: 15px; } #music-toggle { top: 15px; right: 15px; width: 40px; height: 40px; font-size: 18px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="destination.html" class="gift-link">
+            <div class="gift-wrapper">
+                <div class="gift-box">🎁</div>
+                <div class="gift-shadow"></div>
+                <div class="particles"></div>
+            </div>
+            <div class="click-text">Click the Gift!</div>
+        </a>
+    </div>
+    <div id="page-transition-overlay"></div>
+    <audio id="click-sound" preload="auto"><source src="https://raw.githubusercontent.com/xliu2090/my-images/main/xm3683.wav" type="audio/wav"></audio>
+    <audio id="bg-music" loop autoplay preload="auto"><source src="https://raw.githubusercontent.com/xliu2090/my-images/main/obj_wo3DlMOGwrbDjj7DisKw_36568334256_2fbe_f8fb_d953_dea8acd8ffce77212827b3ec58e8a850.mp3" type="audio/mpeg"></audio>
+    <button id="music-toggle">🎵</button>
+    <script>
+        const giftLink = document.querySelector('.gift-link'); const giftWrapper = document.querySelector('.gift-wrapper'); const particlesContainer = document.querySelector('.particles'); const overlay = document.getElementById('page-transition-overlay'); const clickSound = document.getElementById('click-sound'); const bgMusic = document.getElementById('bg-music'); const musicToggle = document.getElementById('music-toggle'); let isClicked = false; const particleCount = 20; const colors = ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#F7A8B8']; for (let i = 0; i < particleCount; i++) { const particle = document.createElement('div'); particle.classList.add('particle'); const angle = Math.random() * 360; const distance = Math.random() * 80 + 50; const x = Math.cos(angle * (Math.PI / 180)) * distance; const y = Math.sin(angle * (Math.PI / 180)) * distance; particle.style.setProperty('--translate-end', `translate(${x}px, ${y}px)`); particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; particlesContainer.appendChild(particle); }
+        giftLink.addEventListener('click', function(event) { event.preventDefault(); if (isClicked) return; isClicked = true; clickSound.currentTime = 0; clickSound.play().catch(e => console.error("点击音效播放失败:", e)); giftWrapper.classList.add('clicked'); setTimeout(() => { overlay.classList.add('visible'); const targetUrl = this.href; setTimeout(() => { window.location.href = targetUrl; }, 500); }, 500); });
+        let musicIsIntendedToPlay = true; let hasInteracted = false; musicToggle.addEventListener('click', () => { musicIsIntendedToPlay = !musicIsIntendedToPlay; if (musicIsIntendedToPlay) { musicToggle.textContent = '🎵'; if (hasInteracted) bgMusic.play(); } else { musicToggle.textContent = '⏸️'; bgMusic.pause(); } });
+        function handleFirstInteraction() { if (hasInteracted) return; hasInteracted = true; if (musicIsIntendedToPlay) { musicToggle.textContent = '🎵'; bgMusic.play().catch(e => console.error("背景音乐播放失败:", e)); } }
+        document.body.addEventListener('click', handleFirstInteraction, { capture: true, once: true }); document.body.addEventListener('touchstart', handleFirstInteraction, { capture: true, once: true });
+    </script>
+</body>
+</html>
